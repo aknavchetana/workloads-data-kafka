@@ -1,0 +1,31 @@
+{
+        "home_dir": "/home/azureadmin/"
+}
+
+{
+        "install_dir": "/opt/apache_kafka/"
+}
+
+{
+        "kafka_ip": "12.3.64.16"
+}
+
+{
+        "kafka_id": "1"
+}
+
+{
+	"num_partitions": "2"
+}
+
+{
+        "zk_hostname": "VM-KAFKA-SERVER-2"
+}
+
+{
+        "zk_client_port": "2181"
+}
+
+{
+	"kafka_server_port": "9092"
+}

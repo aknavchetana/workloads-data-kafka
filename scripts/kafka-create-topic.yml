@@ -1,0 +1,29 @@
+##########################################################################################
+# kafka-create-topic.yml
+# vars: (kafka_*.json)
+#   install_dir - Install directory path
+#   kafka_ip - Zookeeper node private IP address
+#   zk_hostname - Zookeper node hostname
+#   zk_client_port - Zookeeper client port
+#   partitions - Number of partitions for the topic
+#   replication_factor - Replication factor should not be more than number of brokers in the cluster
+##########################################################################################
+
+- name: "Create Topics Kafka"
+  hosts: "{{ kafka_ip }}"
+  become: 'True'
+
+  vars:
+    install_dir: "{{ install_dir }}"
+    kafka_ip: "{{ kafka_ip }}"
+    zk_hostname: "{{ zk_hostname }}"
+    zk_client_port: "{{ zk_client_port }}"
+    replication_factor: "{{ replication_factor }}"
+    partitions: "{{ partitions }}"
+
+  tasks:
+  - name: "Create a topic"
+    shell: bash "{{ install_dir }}"kafka_2.12-2.5.1/bin/kafka-topics.sh --create --zookeeper {{ zk_hostname }}:"{{ zk_client_port }}" --replication-factor "{{ replication_factor }}" --partitions "{{ partitions }}" --topic sample_topic
+
+  - name: "List Topics"
+    shell: bash "{{ install_dir }}"kafka_2.12-2.5.1/bin/kafka-topics.sh --list --zookeeper {{ zk_hostname }}:"{{ zk_client_port }}"

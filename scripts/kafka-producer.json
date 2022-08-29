@@ -1,0 +1,27 @@
+{
+        "producer_ip": "12.3.64.12"
+}
+
+{
+        "bk_0": "12.3.64.10"
+}
+
+{
+        "bk_1": "12.3.64.16"
+}
+
+{
+        "bk_0_server_port": "9092"
+}
+
+{
+        "bk_1_server_port": "9092"
+}
+
+{
+        "install_dir": "/opt/apache_kafka/"
+}
+
+{
+        "home_dir": "/home/azureadmin/"
+}

@@ -1,0 +1,14 @@
+- name: "Create Topics Kafka"
+  hosts: "{{ kafka_ip }}"
+  become: 'True'
+
+  vars:
+    kafka_ip: "{{ kafka_ip }}"
+    zk_hostname: "{{ zk_hostname }}"
+
+  tasks:
+  - name: "Create a topic"
+    shell: bash /opt/apache_kafka/kafka_2.12-2.5.1/bin/kafka-topics.sh --create --zookeeper {{ zk_hostname }}:2181 --replication-factor 2 --partitions 2 --topic sample_topic
+
+  - name: "List Topics"
+    shell: bash /opt/apache_kafka/kafka_2.12-2.5.1/bin/kafka-topics.sh --list --zookeeper {{ zk_hostname }}:2181  

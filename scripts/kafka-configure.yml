@@ -1,0 +1,66 @@
+##########################################################################################
+# kafka-configure.yml
+# vars: (kafka_*.json)
+#   install_dir - Install directory path
+#   kafka_ip - Zookeeper node private IP address
+#   kafka_id - Zookeper node id (e.g. 1 here)
+#   num_partitions - Number of partitions in the broker
+#   zk_hostname - Zookeper node hostname
+#   zk_client_port - Zookeeper client port
+#   kafka_server_port - Kafka server port
+##########################################################################################
+
+- name: "Configure Kafka"
+  hosts: "{{ kafka_ip }}"
+  become: 'True'
+
+  vars:
+    install_dir: "{{ install_dir }}"
+    kafka_ip: "{{ kafka_ip }}"
+    kafka_id: "{{ kafka_id }}"
+    num_partitions: "{{ num_partitions }}"
+    zk_hostname: "{{ zk_hostname }}"
+    zk_client_port: "{{ zk_client_port }}"
+    kafka_server_port: "{{ kafka_server_port }}"
+
+  tasks:
+  - name: "Create log directory if it does not exist"
+    shell: mkdir -p "{{ install_dir }}"kafka_2.12-2.5.1/kafka-logs
+
+  - name: "Remove existing broker id properties"
+    shell: sed -i '/^broker.id=/d' "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+
+  - name: "Add broker id properties"
+    lineinfile:
+      path: "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+      line: "broker.id={{ kafka_id }}"
+
+
+  - name: "Add listeners properties"
+    lineinfile:
+      path: "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+      line: "listeners=PLAINTEXT://:{{ kafka_server_port }}"
+
+  - name: "Remove existing num partitions details"
+    shell: sed -i '/^num.partitions=/d' "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+
+  - name: "Add num partitions properties"
+    lineinfile:
+      path: "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+      line: "num.partitions={{ num_partitions }}"
+
+  - name: "Remove existing log directory properties"
+    shell: sed -i '/^log.dirs=/d' "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+
+  - name: "Add log directory properties"
+    lineinfile:
+      path: "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+      line: "log.dirs={{ install_dir }}kafka_2.12-2.5.1/kafka-logs"
+
+  - name: "Remove existing zookeeper connection properties"
+    shell: sed -i '/^zookeeper.connect=/d' "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+
+  - name: "Add zookeeper connection properties"
+    lineinfile:
+      path: "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties
+      line: "zookeeper.connect={{ zk_hostname }}:{{ zk_client_port }}"

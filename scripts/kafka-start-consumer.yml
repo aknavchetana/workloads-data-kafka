@@ -1,0 +1,32 @@
+##########################################################################################
+# kafka-start-consumer.yml
+# vars: (kafka_*.json)
+#   consumer_ip - Kafka consumer private IP address
+#   bk_0 - Kafka first broker private IP address
+#   bk_1 - Kafka second broker private IP address
+#   bk_0_server_port - Kafka first broker server port
+#   bk_1_server_port - Kafka second broker server port
+#   install_dir - Install directory path
+#   home_dir - Home directory path
+##########################################################################################
+
+- name: "Start Kafka Consumer"
+  hosts: "{{ consumer_ip }}"
+  become: 'True'
+
+  vars:
+    consumer_ip: "{{ consumer_ip }}"
+    bk_0: "{{bk_0}}"
+    bk_1: "{{bk_1}}"
+    bk_0_server_port: "{{bk_0_server_port}}"
+    bk_1_server_port: "{{bk_1_server_port}}"
+    install_dir: "{{ install_dir }}"
+    home_dir: "{{ home_dir }}"
+
+  tasks:
+  - name: "Create log directory if it does not exist"
+    shell: mkdir -p "{{ install_dir }}"kafka_2.12-2.5.1/kafka-logs
+
+  - name: "Consume data from topic"
+    shell: nohup "{{ install_dir }}"kafka_2.12-2.5.1/bin/kafka-console-consumer.sh --bootstrap-server {{bk_0}}:{{bk_0_server_port}},{{bk_1}}:{{bk_1_server_port}} --topic sample_topic --from-beginning > "{{ home_dir }}"output.txt  2>/tmp/createtopicerr.out < /dev/null &
+

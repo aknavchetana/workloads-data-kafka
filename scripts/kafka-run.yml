@@ -1,0 +1,24 @@
+##########################################################################################
+# kafka-run.yml
+# vars: (kafka_*.json)
+#   install_dir - Install directory path
+##########################################################################################
+
+
+- name: "Run Kafka"
+  hosts: [broker]
+  become: 'True'
+
+  vars:
+    install_dir: "{{ install_dir }}"
+
+  tasks:
+  - name: "Start Kafka server"
+    shell: nohup "{{ install_dir }}"kafka_2.12-2.5.1/bin/kafka-server-start.sh "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties >/tmp/kafka.out 2>/tmp/kafkaerr.out < /dev/null &
+
+  - name: "Pause for the server to be up"
+    pause:
+      seconds: 30
+
+  - name: "Check server status"
+    shell: "{{ install_dir }}"kafka_2.12-2.5.1/bin/kafka-server-status.sh "{{ install_dir }}"kafka_2.12-2.5.1/config/server.properties

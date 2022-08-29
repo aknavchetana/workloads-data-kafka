@@ -1,0 +1,37 @@
+##########################################################################################
+# kafka-install.yml
+# vars: (kafka_*.json)
+#   home_dir - Home directory path
+#   install_dir - Install directory path
+#   kafka_server_port - Kafka server port
+##########################################################################################
+
+
+- name: "Install Kafka"
+  hosts: [kafka]
+  become: 'True'
+
+  vars:
+    home_dir: "{{ home_dir }}"
+    install_dir: "{{ install_dir }}"
+    kafka_server_port: "{{ kafka_server_port }}"
+
+  tasks:
+  - name: "Allow Kafka server port"
+    shell: ufw allow "{{ kafka_server_port }}"/tcp
+
+  - name: "Download Kafka"
+    shell: wget https://archive.apache.org/dist/kafka/2.5.1/kafka_2.12-2.5.1.tgz -P "{{ home_dir }}"
+
+  - name: "Extract zookeeeper"
+    shell: tar -zvxf "{{ home_dir }}"kafka_2.12-2.5.1.tgz
+
+  - name: "Create apache_kafka directory if it does not exist"
+    shell: mkdir -p "{{ install_dir }}"
+
+  - name: "copy Kafka directory"
+    shell: cp -r "{{ home_dir }}"kafka_2.12-2.5.1 "{{ install_dir }}"
+
+  - name: "Modify owner of apache_kafka directory"
+    shell: chown -R root:root "{{ install_dir }}"
+

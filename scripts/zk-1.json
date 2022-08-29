@@ -1,0 +1,31 @@
+{
+        "home_dir": "/home/azureadmin/"
+}
+
+{
+        "install_dir": "/opt/apache_kafka/"
+}
+
+{
+        "zk_ip": "12.3.64.10"
+}
+
+{
+        "zk_hostname": "VM-ZK-1-KAFKA-1"
+}
+
+{
+        "zk_id": "1"
+}
+
+{
+        "zk_client_port": "2181"
+}
+
+{
+        "zk_follower_conn_port" : "2888"
+}
+
+{
+        "zk_inter_node_conn_port": "3888"
+}

@@ -1,0 +1,7 @@
+{
+        "hosts_info": "12.3.64.10 VM-ZK-1-KAFKA-1 VM-ZK-1-KAFKA-1\n
+                       12.3.64.16 VM-KAFKA-SERVER-2 VM-KAFKA-SERVER-2\n
+                       12.3.64.12 VM-KAFKA-P VM-KAFKA-P\n
+                       12.3.64.13 VM-KAFKA-C VM-KAFKA-C"
+}
+

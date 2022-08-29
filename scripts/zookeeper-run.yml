@@ -1,0 +1,16 @@
+##########################################################################################
+# zoookeeper-run.yml
+# vars: (zk_1.json)
+#   install_dir - Install directory path
+##########################################################################################
+
+
+- name: "Run Zookeeper"
+  hosts: [zookeeper]
+  become: 'True'
+
+  vars:
+    install_dir : "{{ install_dir }}
+  tasks:
+  - name: "Start Zookeeper server"
+    shell: bash "{{ install_dir }}"zookeeper-3.4.14/bin/zkServer.sh start "{{ install_dir }}"zookeeper-3.4.14/conf/zoo.cfg

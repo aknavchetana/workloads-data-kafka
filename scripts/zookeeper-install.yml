@@ -1,0 +1,31 @@
+##########################################################################################
+# zoookeeper-install.yml
+# vars: (zk_1.json)
+#   home_dir - Home directory path
+#   install_dir - Install directory path
+##########################################################################################
+
+- name: "Install Zookeeper"
+  hosts: [zookeeper]
+  become: 'True'
+
+  vars:
+    home_dir: "{{ home_dir }}"
+    install_dir: "{{ install_dir }}"
+
+  tasks:
+  - name: "Download zookeeper"
+    shell: wget https://archive.apache.org/dist/zookeeper/zookeeper-3.4.14/zookeeper-3.4.14.tar.gz -P "{{ home_dir }}"
+
+  - name: "Extract zookeeeper"
+    shell: tar -zvxf "{{ home_dir }}"zookeeper-3.4.14.tar.gz
+
+  - name: "Create apache_kafka directory if it does not exist"
+    shell: mkdir -p "{{ install_dir }}"
+
+  - name: "copy zookeeper directory"
+    shell: cp -r "{{ home_dir }}"zookeeper-3.4.14 "{{ install_dir }}"
+
+  - name: "Modify owner of install directory"
+    shell: chown -R root:root "{{ install_dir }}"
+

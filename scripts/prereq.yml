@@ -1,0 +1,32 @@
+##########################################################################################
+# Prereq.yml
+# vars: (parameters.json)
+#   hosts_info - Contains private IP address and hostname information of all vms
+##########################################################################################
+
+- name: "Install Prerequisites"
+  hosts: all
+  become: 'True'
+
+  vars:
+    hosts_info: "{{ hosts_info }}"
+
+  tasks:
+  - name: "Update and upgrade apt packages"
+    apt:
+      upgrade: "True"
+      update_cache: "True"
+      force_apt_get: "True"
+      cache_valid_time: 3600
+
+  - name: "Install Java"
+    shell: sudo apt-get install -y openjdk-8-jdk openjdk-8-jre
+
+  - name: "Check Java version"
+    shell: java -version
+
+  - name: "Add ip address and hostnames to /etc/hosts file"
+    blockinfile:
+      dest: /etc/hosts
+      content: "{{ hosts_info }}"
+

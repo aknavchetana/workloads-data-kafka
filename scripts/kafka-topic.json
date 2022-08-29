@@ -1,0 +1,23 @@
+{
+        "install_dir": "/opt/apache_kafka/"
+}
+
+{
+        "kafka_ip": "12.3.64.10"
+}
+
+{
+        "zk_hostname": "VM-ZK-1-KAFKA-1"
+}
+
+{
+        "zk_client_port": "2181"
+}
+
+{
+        "partitions": "2"
+}
+
+{
+        "replication_factor": "2"
+}

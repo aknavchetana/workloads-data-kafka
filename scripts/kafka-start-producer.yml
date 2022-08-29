@@ -1,0 +1,38 @@
+##########################################################################################
+# kafka-start-producer.yml
+# vars: (kafka_*.json)
+#   producer_ip - Kafka producer private IP address
+#   bk_0 - Kafka first broker private IP address
+#   bk_1 - Kafka second broker private IP address
+#   bk_0_server_port - Kafka first broker server port
+#   bk_1_server_port - Kafka second broker server port
+#   install_dir - Install directory path
+#   home_dir - Home directory path
+##########################################################################################
+
+- name: "Start Kafka Producer"
+  hosts: "{{ producer_ip }}"
+  become: 'True'
+
+  vars:
+    producer_ip: "{{ producer_ip }}"
+    bk_0: "{{bk_0}}"
+    bk_1: "{{bk_1}}"
+    bk_0_server_port: "{{bk_0_server_port}}"
+    bk_1_server_port: "{{bk_1_server_port}}"
+    install_dir: "{{ install_dir }}"
+    home_dir: "{{ home_dir }}"
+
+  tasks:
+  - name: "Create log directory if it does not exist"
+    shell: mkdir -p "{{ install_dir }}"kafka_2.12-2.5.1/kafka-logs
+
+  - name: "Add input text file for producer"
+    copy:
+      dest: "{{ home_dir }}"input.txt
+      content: "Hi there, This is sample data to test producer consumer data flow"
+
+
+  - name: "Publish data to topic"
+    shell: bash "{{ install_dir }}"kafka_2.12-2.5.1/bin/kafka-console-producer.sh --broker-list {{bk_0}}:{{bk_0_server_port}},{{bk_1}}:{{bk_1_server_port}} --topic sample_topic < "{{ home_dir }}"input.txt
+

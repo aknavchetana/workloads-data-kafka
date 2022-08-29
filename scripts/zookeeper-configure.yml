@@ -1,0 +1,63 @@
+##########################################################################################
+# zoookeeper-configure.yml
+# vars: (zk_1.json)
+#   zk_ip - Zookeeper node private IP address
+#   zk_id - Zookeper node id (e.g. 1 here)
+#   zk_hostname - Zookeper node hostname
+#   zk_client_port - Zookeeper client conn port
+#   zk_follower_conn_port - Zookeeper follower connections port
+#   zk_inter_node_conn_port - Zookeeper internode connections port
+#   install_dir - Install directory path
+##########################################################################################
+
+- name: "Configure Zookeeper"
+  hosts: "{{ zk_ip }}"
+  become: 'True'
+
+  vars:
+    zk_ip: "{{ zk_ip }}"
+    zk_id: "{{ zk_id }}"
+    zk_hostname: "{{ zk_hostname }}"
+    zk_client_port: "{{ zk_client_port }}"
+    zk_follower_conn_port: "{{ zk_follower_conn_port }}"
+    zk_inter_node_conn_port: "{{ zk_inter_node_conn_port }}"
+    install_dir: "{{ install_dir }}"
+
+  tasks:
+  - name: "Allow ZK Client port"
+    shell: ufw allow "{{ zk_client_port }}"/tcp
+
+  - name: "Allow ZK Follower Connections port"
+    shell: ufw allow "{{ zk_follower_conn_port }}"/tcp
+
+  - name: "Allow ZK Intern node Coneection port"
+    shell: ufw allow "{{ zk_inter_node_conn_port }}"/tcp
+
+  - name: "Create data directory if it does not exist"
+    shell: mkdir -p "{{ install_dir }}"zookeeper-3.4.14/zkdata
+
+  - name: "Add zookeeper server id to myid file"
+    copy:
+      dest: "{{ install_dir }}"zookeeper-3.4.14/zkdata/myid
+      content: "{{ zk_id }}"
+
+  - name: "Make a copy of zoo.cfg file"
+    copy:
+      src: "{{ install_dir }}"zookeeper-3.4.14/conf/zoo_sample.cfg
+      dest: "{{ install_dir }}"zookeeper-3.4.14/conf/zoo.cfg
+      remote_src: 'True'
+
+  - name: "Add zookeeper server details to config file"
+    lineinfile:
+      path: "{{ install_dir }}"zookeeper-3.4.14/conf/zoo.cfg
+      line: "server.{{ zk_id }}={{ zk_hostname }}:{{ zk_follower_conn_port }}:{{ zk_inter_node_conn_port }}"
+
+  - name: "Remove existing data directory details"
+    shell: sed -i '/^dataDir=/d' "{{ install_dir }}"zookeeper-3.4.14/conf/zoo.cfg
+
+  - name: "Add zookeeper data directory details to config file"
+    lineinfile:
+      path: "{{ install_dir }}"zookeeper-3.4.14/conf/zoo.cfg
+      line: "dataDir={{ install_dir }}zookeeper-3.4.14/zkdata"
+
+
